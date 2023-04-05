@@ -1,4 +1,4 @@
-package component.student
+package component.settings
 
 import csstype.FontWeight
 import emotion.react.css

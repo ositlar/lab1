@@ -1,5 +1,6 @@
-package component.student
+package component.settings
 
+import component.student.QueryError
 import js.core.get
 import js.core.jso
 import kotlinx.serialization.decodeFromString

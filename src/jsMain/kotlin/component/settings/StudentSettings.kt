@@ -1,4 +1,4 @@
-package component.student
+package component.settings
 
 import me.ositlar.application.common.Item
 import me.ositlar.application.data.Student

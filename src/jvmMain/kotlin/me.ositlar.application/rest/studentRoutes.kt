@@ -73,21 +73,3 @@ fun Route.studentRoutes() {
         }
     }
 }
-
-fun Route.studentById() {
-    route(Config.studentsPath) {
-        get("{id}/group") {
-            val id =
-                call.parameters["id"] ?: return@get call.respondText(
-                    "Missing or malformed id",
-                    status = HttpStatusCode.BadRequest
-                )
-            val studentItem =
-                studentsRepo.read(id) ?: return@get call.respondText(
-                    "No student with id $id",
-                    status = HttpStatusCode.NotFound
-                )
-            call.respond(studentItem.elem)
-        }
-    }
-}

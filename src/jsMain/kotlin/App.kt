@@ -1,5 +1,6 @@
+import component.group.groupContainer
 import component.student.studentContainer
-import component.student.studentSettingContainer
+import component.settings.studentSettingContainer
 import me.ositlar.application.config.Config
 import react.FC
 import react.Props
@@ -29,6 +30,10 @@ val app = FC<Props> ("App"){
                     +"Students"
                     to = Config.studentsPath
                 }
+                Link {
+                    +"Groups"
+                    to = Config.groupPath
+                }
                 Routes {
                     Route {
                         path = Config.studentsPath
@@ -37,6 +42,10 @@ val app = FC<Props> ("App"){
                     Route {
                         path = Config.studentsPath + ":name"
                         element = studentSettingContainer.create()
+                    }
+                    Route {
+                        path = Config.groupPath
+                        element = groupContainer.create()
                     }
                 }
             }
