@@ -20,15 +20,20 @@ import tools.fetch
 import tools.fetchText
 import kotlin.js.json
 
+
+
 val studentContainer = FC("StudentsContainer") { _: Props ->
     val queryClient = useQueryClient()
+
     val studentListQueryKey = arrayOf("studentList").unsafeCast<QueryKey>()
+
     val query = useQuery<String, QueryError, String, QueryKey>(
         queryKey = studentListQueryKey,
         queryFn = {
             fetchText(Config.studentsPath)
         }
     )
+
     val addStudentMutation = useMutation<HTTPResult, Any, Student, Any>(
         mutationFn = { student: Student ->
             fetch(
@@ -53,24 +58,7 @@ val studentContainer = FC("StudentsContainer") { _: Props ->
                 "${Config.studentsPath}$studentId",
                 jso {
                     method = "DELETE"
-                }
-            )
-        },
-        options = jso {
-            onSuccess = { _: Any, _: Any, _: Any? ->
-                queryClient.invalidateQueries<Any>(studentListQueryKey)
-            }
-        }
-    )
 
-    val updateStudentMutation = useMutation<HTTPResult, Any, Item<Student>, Any>(
-        mutationFn = { studentItem: Item<Student> ->
-            fetch(
-                "${Config.studentsPath}${studentItem.id}",
-                jso {
-                    method = "PUT"
-                    headers = json("Content-Type" to "application/json")
-                    body = Json.encodeToString(studentItem.elem)
                 }
             )
         },
@@ -95,9 +83,6 @@ val studentContainer = FC("StudentsContainer") { _: Props ->
             students = items
             deleteStudent = {
                 deleteStudentMutation.mutateAsync(it, null)
-            }
-            updateStudent = {
-                updateStudentMutation.mutateAsync(it, null)
             }
         }
     }

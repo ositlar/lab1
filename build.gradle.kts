@@ -114,3 +114,6 @@ tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
 }
+dependencies {
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.0")
+}

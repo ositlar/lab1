@@ -27,7 +27,7 @@ fun Route.studentRoutes() {
                 )
             val studentItem =
                 studentsRepo.read(id) ?: return@get call.respondText(
-                    "No students with id $id",
+                    "No student with id $id",
                     status = HttpStatusCode.NotFound
                 )
             call.respond(studentItem)
@@ -70,6 +70,51 @@ fun Route.studentRoutes() {
                 "Student updates correctly",
                 status = HttpStatusCode.Created
             )
+        }
+    }
+}
+
+fun Route.studentsByGroup(){
+    route(Config.studentsByGroupPath){
+        get("{group}") {
+            val id =
+                call.parameters["group"] ?: return@get call.respondText(
+                    "Missing or malformed group",
+                    status = HttpStatusCode.BadRequest
+                )
+            val students = studentsRepo.read().map{
+                if(it.elem.group==id)
+                    it.elem.fullName()
+                else null
+            }.filterNotNull()
+            if (students.isEmpty()) {
+                call.respondText("No students with this group found", status = HttpStatusCode.NotFound)
+            } else {
+                call.respond(students)
+            }
+        }
+        get{
+            val receiveGroup =
+                call.parameters["group"] ?: return@get call.respondText(
+                    "Missing or malformed param group",
+                    status = HttpStatusCode.BadRequest
+                )
+            val students = studentsRepo.read().filter{ it.elem.group == receiveGroup }
+            if (students.isEmpty()) {
+                call.respondText("No students and groups found", status = HttpStatusCode.NotFound)
+            } else {
+                call.respond(students)
+            }
+        }
+        put {
+            val receiveGroup = call.receive<String>()
+            val students = studentsRepo.read()
+            val studentsInGroup = students.filter{ it.elem.group == receiveGroup }
+            if (studentsInGroup.isEmpty()) {
+                call.respondText("No groups found", status = HttpStatusCode.NotFound)
+            } else {
+                call.respond(studentsInGroup.map{it.elem.fullName()})
+            }
         }
     }
 }

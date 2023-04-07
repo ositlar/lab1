@@ -8,9 +8,10 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.delay
 import me.ositlar.application.repo.createTestData
-import me.ositlar.application.rest.editGroupsRoutes
+//import me.ositlar.application.rest.editGroupsRoutes
 import me.ositlar.application.rest.groupRoutes
 import me.ositlar.application.rest.studentRoutes
+import me.ositlar.application.rest.studentsByGroup
 
 fun Application.main(isTest: Boolean = true) {
     config(isTest)
@@ -36,7 +37,7 @@ fun Application.config(isTest: Boolean) {
 fun Application.rest() {
     routing {
         studentRoutes()
-        editGroupsRoutes()
+        studentsByGroup()
         groupRoutes()
     }
 }

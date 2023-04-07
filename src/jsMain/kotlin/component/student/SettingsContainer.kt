@@ -1,6 +1,5 @@
-package component.settings
+package component.student
 
-import component.student.QueryError
 import js.core.get
 import js.core.jso
 import kotlinx.serialization.decodeFromString
@@ -11,7 +10,7 @@ import me.ositlar.application.config.Config
 import me.ositlar.application.data.Student
 import react.FC
 import react.Props
-import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML
 import react.router.useParams
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useMutation
@@ -22,62 +21,66 @@ import tools.fetch
 import tools.fetchText
 import kotlin.js.json
 
-val studentSettingContainer = FC("StudentSettingContainer") { _: Props ->
-    val id = useParams()["name"]
+val containerStudentProfile = FC("groupContainer") { _: Props ->
+    val paramsId = useParams()
+    val studentID = paramsId["id"]
     val queryClient = useQueryClient()
-    val studentQueryKey = arrayOf("student").unsafeCast<QueryKey>()
+    val groupListQueryKey = arrayOf(studentID).unsafeCast<QueryKey>()
     val query = useQuery<String, QueryError, String, QueryKey>(
-        queryKey = studentQueryKey,
+        queryKey = groupListQueryKey,
         queryFn = {
-            fetchText(Config.studentsPath + id)
+            fetchText("${Config.updateGroupPath}${studentID}")
         }
     )
-    val updateStudentGroupMutation = useMutation<HTTPResult, Any, Pair<String, String>, Any>(
-        mutationFn = { pair: Pair<String, String> ->
+
+    val updateGroupMutation = useMutation<HTTPResult, Any, String, Any>(
+        mutationFn = { item: String ->
             fetch(
-                Config.updateGroup + "group",
+                "${Config.updateGroupPath}${studentID}",
                 jso {
                     method = "PUT"
                     headers = json("Content-Type" to "application/json")
-                    body = Json.encodeToString(pair)
+                    body = item
                 }
             )
         },
         options = jso {
             onSuccess = { _: Any, _: Any, _: Any? ->
-                queryClient.invalidateQueries<Any>(studentQueryKey)
+                queryClient.invalidateQueries<Any>(groupListQueryKey)
             }
         }
     )
-    val updateStudentMutation = useMutation<HTTPResult, Any, Triple<String, String, String>, Any>(
-        mutationFn = { triple: Triple<String, String, String> ->
+
+    val updateStudentMutation = useMutation<HTTPResult, Any, Item<Student>, Any>(
+        mutationFn = { studentItem: Item<Student> ->
             fetch(
-                Config.updateGroup + "name",
+                "${Config.studentsPath}${studentItem.id}",
                 jso {
                     method = "PUT"
                     headers = json("Content-Type" to "application/json")
-                    body = Json.encodeToString(triple)
+                    body = Json.encodeToString(studentItem.elem)
                 }
             )
         },
         options = jso {
             onSuccess = { _: Any, _: Any, _: Any? ->
-                queryClient.invalidateQueries<Any>(studentQueryKey)
+                queryClient.invalidateQueries<Any>(groupListQueryKey)
             }
         }
     )
-    if (query.isLoading) div { +"Loading .." }
-    else if (query.isError) div { +"Error!" }
+
+    if (query.isLoading) ReactHTML.div { +"Loading .." }
+    else if (query.isError) ReactHTML.div { +"Error!" }
     else {
         val item =
             Json.decodeFromString<Item<Student>>(query.data ?: "")
-        CStudentSetting {
+        CStudentItem {
             student = item
+            upgradeGroup = {
+                updateGroupMutation.mutateAsync(it, null)
+            }
             updateStudent = {
                 updateStudentMutation.mutateAsync(it, null)
-            }
-            updateStudentGroup = {
-                updateStudentGroupMutation.mutateAsync(it, null)
             }
         }
     }

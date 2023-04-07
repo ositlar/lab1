@@ -6,10 +6,10 @@ val studentsRepo = ListRepo<Student>()
 
 fun createTestData() {
     listOf(
-        Student("Sheldon", "Cooper", "20z"),
-        Student("Leonard", "Hofstadter", "20m"),
-        Student("Howard", "Wolowitz", "50m"),
-        Student("Penny", "Hofstadter", "21p"),
+        Student("Sheldon", "Cooper", "20x"),
+        Student("Leonard", "Hofstadter", "20x"),
+        Student("Howard", "Wolowitz", "20x"),
+        Student("Penny", "Hofstadter", "21z"),
     ).apply {
         map {
             studentsRepo.create(it)

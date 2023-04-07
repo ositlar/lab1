@@ -10,11 +10,11 @@ import react.dom.html.ReactHTML.label
 import react.useRef
 import web.html.HTMLInputElement
 
-external interface AddStudentProps : Props {
+external interface AddStudentProps: Props {
     var addStudent: (Student) -> Unit
 }
 
-val CAddStudent = FC<AddStudentProps>("AddStudent") { props ->
+val CAddStudent = FC<AddStudentProps>("AddStudent"){ props ->
     val firstnameRef = useRef<HTMLInputElement>()
     val surnameRef = useRef<HTMLInputElement>()
     val groupRef = useRef<HTMLInputElement>()
@@ -36,9 +36,7 @@ val CAddStudent = FC<AddStudentProps>("AddStudent") { props ->
             onClick = {
                 firstnameRef.current?.value?.let { firstname ->
                     surnameRef.current?.value?.let { surname ->
-                        groupRef.current?.value?.let { group ->
-                            props.addStudent(Student(firstname, surname, group))
-                        }
+                        props.addStudent(Student(firstname, surname, groupRef.current?.value.toString()))
                     }
                 }
             }

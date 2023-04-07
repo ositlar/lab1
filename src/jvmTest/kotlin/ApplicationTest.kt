@@ -7,11 +7,8 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.ositlar.application.common.Item
-import me.ositlar.application.config.Config
-import me.ositlar.application.data.Student
-import me.ositlar.application.data.json
 import me.ositlar.application.main
+import me.ositlar.application.repo.studentsRepo
 
 class ApplicationTest : StringSpec({
     "Students routes" {
@@ -19,6 +16,33 @@ class ApplicationTest : StringSpec({
             application {
                 main()
             }
+            withClue("get1") {
+                val group = "20m"
+                Json.decodeFromString<Array<String>>(
+                    client.put("groups/") {
+                        contentType(ContentType.Application.Json)
+                        setBody(group)
+                    }.bodyAsText()
+                ).map { it shouldBe "Leonard Hofstadter" }
+            }
+
+            val students = studentsRepo.read().filter { it.elem.group == "20x" }
+            withClue("get2") {
+                val group = "20x"
+                val respondStudents = Json.decodeFromString<Array<String>>(
+                    client.put("groups/") {
+                        contentType(ContentType.Application.Json)
+                        setBody(group)
+                    }.bodyAsText()
+                )
+                respondStudents[0] shouldBe students[0].elem.fullName()
+                respondStudents[1] shouldBe students[1].elem.fullName()
+            }
+        }
+    }
+})
+
+            /**
             val students = withClue("read") {
                 val response = client.get("/students/")
                 response.status shouldBe HttpStatusCode.OK
@@ -66,6 +90,8 @@ class ApplicationTest : StringSpec({
                     size shouldBe 4
                 }
             }
+
         }
     }
 })
+             **/
