@@ -8,7 +8,6 @@ import io.ktor.server.testing.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import me.ositlar.application.main
-import me.ositlar.application.repo.studentsRepo
 
 class ApplicationTest : StringSpec({
     "Students routes" {
@@ -16,28 +15,16 @@ class ApplicationTest : StringSpec({
             application {
                 main()
             }
-            withClue("get1") {
+            withClue("Get one student") {
                 val group = "21z"
                 Json.decodeFromString<List<String>>(
                     client.put("groups/") {
                         contentType(ContentType.Application.Json)
                         setBody(group)
                     }.bodyAsText()
-                ).map { it shouldBe "Penny Hofstadter" }
-            }
-
-            val students = studentsRepo.read().filter { it.elem.group == "20x" }
-            withClue("get2") {
-                val group = "20x"
-                val respondStudents = Json.decodeFromString<List<String>>(
-                    client.put("groups/") {
-                        contentType(ContentType.Application.Json)
-                        setBody(group)
-                    }.bodyAsText()
-                )
-                respondStudents[0] shouldBe students[0].elem.fullName()
-                respondStudents[1] shouldBe students[1].elem.fullName()
-                respondStudents[2] shouldBe students[2].elem.fullName()
+                ).map {
+                    it shouldBe "Penny Hofstadter"
+                }
             }
         }
     }

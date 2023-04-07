@@ -76,45 +76,74 @@ fun Route.studentRoutes() {
 
 fun Route.studentsByGroup(){
     route(Config.studentsByGroupPath){
-        get("{group}") {
-            val id =
-                call.parameters["group"] ?: return@get call.respondText(
-                    "Missing or malformed group",
-                    status = HttpStatusCode.BadRequest
-                )
-            val students = studentsRepo.read().map{
-                if(it.elem.group==id)
-                    it.elem.fullName()
-                else null
-            }.filterNotNull()
-            if (students.isEmpty()) {
-                call.respondText("No students with this group found", status = HttpStatusCode.NotFound)
-            } else {
-                call.respond(students)
-            }
+        get {
+                if (studentsRepo.read().map { it.elem.group }.toSet().isEmpty()) {
+                    call.respondText("No groups found",
+                        status = HttpStatusCode.NotFound)
+                } else {
+                    call.respond(studentsRepo.read().map { it.elem.group }.toSet())
+                }
+
         }
-        get{
-            val receiveGroup =
-                call.parameters["group"] ?: return@get call.respondText(
-                    "Missing or malformed param group",
-                    status = HttpStatusCode.BadRequest
-                )
-            val students = studentsRepo.read().filter{ it.elem.group == receiveGroup }
-            if (students.isEmpty()) {
-                call.respondText("No students and groups found", status = HttpStatusCode.NotFound)
-            } else {
-                call.respond(students)
-            }
+        post {
+            val group = call.receiveParameters()["group"]
+            val students = studentsRepo.read().filter { it.elem.group == group }
+            call.respond(students.map { it.elem.fullName() })
         }
-        put {
-            val receiveGroup = call.receive<String>()
-            val students = studentsRepo.read()
-            val studentsInGroup = students.filter{ it.elem.group == receiveGroup }
-            if (studentsInGroup.isEmpty()) {
-                call.respondText("No groups found", status = HttpStatusCode.NotFound)
-            } else {
-                call.respond(studentsInGroup.map{it.elem.fullName()})
-            }
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        get("{group}") {
+//            val groupReceive =
+//                call.parameters["group"] ?: return@get call.respondText(
+//                    "Missing or malformed group",
+//                    status = HttpStatusCode.BadRequest
+//                )
+//            val students = studentsRepo.read().filter {
+//                it.elem.group == groupReceive
+//            }
+//            if (students.isEmpty()) {
+//                call.respondText("No students with this group found", status = HttpStatusCode.NotFound)
+//            } else {
+//                call.respond(students)
+//            }
+//        }
+//        get{
+//            val receiveGroup =
+//                call.parameters["group"] ?: return@get call.respondText(
+//                    "Missing or malformed param group",
+//                    status = HttpStatusCode.BadRequest
+//                )
+//            val students = studentsRepo.read().filter{
+//                it.elem.group == receiveGroup
+//            }
+//            if (students.isEmpty()) {
+//                call.respondText("No students and groups found", status = HttpStatusCode.NotFound)
+//            } else {
+//                call.respond(students)
+//            }
+//        }
+//        put {
+//            val receiveGroup = call.receive<String>()
+//            val students = studentsRepo.read()
+//            val studentsInGroup = students.filter{ it.elem.group == receiveGroup }
+//            if (studentsInGroup.isEmpty()) {
+//                call.respondText("No groups found", status = HttpStatusCode.NotFound)
+//            } else {
+//                call.respond(studentsInGroup.map{it.elem.fullName()})
+//            }
+//        }
     }
 }
