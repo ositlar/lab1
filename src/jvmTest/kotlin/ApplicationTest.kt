@@ -17,19 +17,19 @@ class ApplicationTest : StringSpec({
                 main()
             }
             withClue("get1") {
-                val group = "20m"
-                Json.decodeFromString<Array<String>>(
+                val group = "21z"
+                Json.decodeFromString<List<String>>(
                     client.put("groups/") {
                         contentType(ContentType.Application.Json)
                         setBody(group)
                     }.bodyAsText()
-                ).map { it shouldBe "Leonard Hofstadter" }
+                ).map { it shouldBe "Penny Hofstadter" }
             }
 
             val students = studentsRepo.read().filter { it.elem.group == "20x" }
             withClue("get2") {
                 val group = "20x"
-                val respondStudents = Json.decodeFromString<Array<String>>(
+                val respondStudents = Json.decodeFromString<List<String>>(
                     client.put("groups/") {
                         contentType(ContentType.Application.Json)
                         setBody(group)
@@ -37,6 +37,7 @@ class ApplicationTest : StringSpec({
                 )
                 respondStudents[0] shouldBe students[0].elem.fullName()
                 respondStudents[1] shouldBe students[1].elem.fullName()
+                respondStudents[2] shouldBe students[2].elem.fullName()
             }
         }
     }
