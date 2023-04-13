@@ -1,59 +1,85 @@
-import component.student.containerStudentProfile
-import component.student.group.groupContainer
-import component.student.studentContainer
+import component.lesson.CLessonAdd
+import component.lesson.CLessonEditContainer
+import component.lesson.CLessonInList
+import component.student.CStudentAdd
+import component.student.CStudentEdit
+import component.student.CStudentInList
+import component.template.RestContainerChildProps
+import component.template.restContainer
+import component.template.restList
 import me.ositlar.application.config.Config
+import me.ositlar.application.data.Lesson
+import me.ositlar.application.data.Student
 import react.FC
 import react.Props
 import react.create
+import react.createContext
 import react.dom.client.createRoot
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.tr
+import react.dom.html.ReactHTML.li
+import react.dom.html.ReactHTML.ul
 import react.router.Route
 import react.router.Routes
 import react.router.dom.HashRouter
 import react.router.dom.Link
 import tanstack.query.core.QueryClient
+import tanstack.query.core.QueryKey
 import tanstack.react.query.QueryClientProvider
+import tanstack.react.query.devtools.ReactQueryDevtools
 import web.dom.document
+
+val invalidateRepoKey = createContext<QueryKey>()
 
 fun main() {
     val container = document.getElementById("root")!!
     createRoot(container).render(app.create())
 }
 
-val app = FC<Props> ("App") {
-    QueryClientProvider {
-        client = QueryClient()
-        HashRouter {
-            div {
-                tr {
-                    Link {
-                        +"Students"
-                        to = Config.studentsPath
+val app = FC<Props>("App") {
+    HashRouter {
+        QueryClientProvider {
+            client = QueryClient()
+            ul {
+                listOf("Students", "Lessons").map { tag ->
+                    li {
+                        Link {
+                            +tag
+                            to = tag.lowercase()
+                        }
                     }
                 }
-                tr {
-                    Link {
-                        +"Get students in group"
-                        to = Config.studentsByGroupPath
-                    }
-                }
-
             }
+
             Routes {
                 Route {
-                    path = Config.studentsPath
-                    element = studentContainer.create {}
+                    path = "lessons"
+                    val list: FC<RestContainerChildProps<Lesson>> =
+                        restList(
+                            CLessonInList,
+                            CLessonAdd,
+                            CLessonEditContainer
+                        )
+                    element = restContainer(
+                        Config.lessonsPath,
+                        list,
+                        "lessons"
+                    ).create()
                 }
                 Route {
-                    path = "${Config.updateGroupPath}:id"
-                    element = containerStudentProfile.create {}
-                }
-                Route {
-                    path = Config.studentsByGroupPath
-                    element = groupContainer.create {}
+                    path = "students"
+                    val list: FC<RestContainerChildProps<Student>> =
+                        restList(
+                            CStudentInList,
+                            CStudentAdd,
+                            CStudentEdit
+                        )
+                    element = restContainer(
+                        Config.studentsPath,
+                        list,
+                        "students"
+                    ).create()
                 }
             }
+            ReactQueryDevtools { }
         }
     }
 }

@@ -1,6 +1,6 @@
 package component.student
 
-import component.template.EditAddProps
+import component.template.EditItemProps
 import me.ositlar.application.data.Student
 import react.FC
 import react.dom.html.ReactHTML.button
@@ -9,9 +9,9 @@ import react.dom.html.ReactHTML.span
 import react.useState
 import web.html.InputType
 
-val CStudentAdd = FC<EditAddProps<Student>>("StudentAdd") { props ->
-    var firstname by useState("")
-    var surname by useState("")
+val CStudentEdit = FC<EditItemProps<Student>>("StudentEdit") { props ->
+    var firstname by useState(props.item.elem.firstname)
+    var surname by useState(props.item.elem.surname)
     span {
         input {
             type = InputType.text
@@ -21,7 +21,7 @@ val CStudentAdd = FC<EditAddProps<Student>>("StudentAdd") { props ->
         input {
             type = InputType.text
             value = surname
-            onChange = { surname = it.target.value }
+            onChange = {surname = it.target.value }
         }
     }
     button {

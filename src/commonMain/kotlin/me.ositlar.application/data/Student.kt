@@ -9,7 +9,6 @@ import me.ositlar.application.common.ItemId
 class Student(
     val firstname: String,
     val surname: String,
-    var group: String
 ) {
     fun fullName() =
         "$firstname $surname"
