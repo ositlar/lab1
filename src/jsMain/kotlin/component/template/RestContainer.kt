@@ -36,6 +36,7 @@ inline fun <reified E : Any> restContainer(
     val queryClient = useQueryClient()
     val myQueryKey = arrayOf(queryId).unsafeCast<QueryKey>()
 
+
     val query = useQuery<String, QueryError, String, QueryKey>(
         queryKey = myQueryKey,
         queryFn = {
@@ -45,7 +46,7 @@ inline fun <reified E : Any> restContainer(
     val addMutation = useMutation<HTTPResult, Any, E, Any>(
         mutationFn = { element: E ->
             fetch(
-                url,
+                url ,
                 jso {
                     method = "POST"
                     headers = json("Content-Type" to "application/json")

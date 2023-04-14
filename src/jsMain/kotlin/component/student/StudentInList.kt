@@ -4,9 +4,14 @@ import component.template.ElementInListProps
 import me.ositlar.application.data.Student
 import react.FC
 import react.dom.html.ReactHTML.span
+import react.router.dom.Link
+
 
 val CStudentInList = FC<ElementInListProps<Student>>("StudentInList") { props ->
     span {
-        +props.element.fullName()
+        Link {
+            +props.item.elem.fullName()
+            to = "inLesson/"+props.item.id
+        }
     }
 }

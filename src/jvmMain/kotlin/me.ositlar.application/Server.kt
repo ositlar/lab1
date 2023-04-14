@@ -9,6 +9,7 @@ import io.ktor.server.routing.*
 import kotlinx.coroutines.delay
 import me.ositlar.application.repo.createTestData
 import me.ositlar.application.rest.lessonRoutes
+import me.ositlar.application.rest.studentLessonRoutes
 import me.ositlar.application.rest.studentRoutes
 
 fun Application.main(isTest: Boolean = true) {
@@ -36,6 +37,7 @@ fun Application.rest() {
     routing {
         studentRoutes()
         lessonRoutes()
+        studentLessonRoutes()
     }
 }
 

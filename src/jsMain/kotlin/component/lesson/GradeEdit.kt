@@ -8,6 +8,7 @@ import react.dom.html.ReactHTML.tbody
 import react.dom.html.ReactHTML.td
 import react.dom.html.ReactHTML.tr
 
+
 external interface GradeEditProps : Props {
     var students: Array<GradeInfoFull>
     var changeStudents: (Array<GradeInfoFull>) -> Unit
@@ -19,7 +20,7 @@ val CGradeEdit = FC<GradeEditProps>("GradeEdit") { props ->
             props.students.map { itemGradePair ->
                 tr {
                     td {
-                        +itemGradePair.itemStudent.elem.fullname()
+                        +itemGradePair.itemStudent.elem.fullName()
                     }
                     td {
                         CGrade {
