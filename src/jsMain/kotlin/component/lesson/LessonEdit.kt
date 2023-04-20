@@ -92,6 +92,9 @@ val CLessonEdit = FC<LessonEditProps>("LessonEdit") { props ->
     CAddStudentToLesson {
         lesson = props.item
     }
+    CDeleteStudent{
+        lesson = props.item
+    }
     CGradeEdit {
         students = props.students
         changeStudents = {

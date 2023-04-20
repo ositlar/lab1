@@ -12,6 +12,7 @@ import react.Props
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.label
+import react.dom.html.ReactHTML.li
 import react.router.useParams
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useQuery
@@ -23,8 +24,9 @@ val studentInLessonContainer = FC<Props>("SimpleStudent") {
     val studentListQueryKey = arrayOf("student").unsafeCast<QueryKey>()
 
     val query = useQuery<String, QueryError, String, QueryKey>(queryKey = studentListQueryKey, queryFn = {
-        fetchText(Config.studentsPath + "inLesson/" + id)
+        fetchText(Config.studentsPath + "personsLessons/" + id)
     })
+
 
     if (query.isLoading) ReactHTML.div { +"Loading .." }
     else if (query.isError) ReactHTML.div { +"Error!" }
@@ -32,14 +34,14 @@ val studentInLessonContainer = FC<Props>("SimpleStudent") {
         val item = Json.decodeFromString<Pair<List<String>, List<String>>>(query.data ?: "")
         label {
             div {
-                item.second.forEach { +"$it  :" }
+                item.first.forEach { +"$it  :" }
                 css {
                     fontWeight = FontWeight.bolder
                 }
             }
         }
-        item.first.map {
-            div { label { +it } }
+        item.second.map {
+            div { li { +it } }
         }
     }
 }

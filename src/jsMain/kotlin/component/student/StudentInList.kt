@@ -11,7 +11,7 @@ val CStudentInList = FC<ElementInListProps<Student>>("StudentInList") { props ->
     span {
         Link {
             +props.item.elem.fullName()
-            to = "inLesson/"+props.item.id
+            to = "personsLessons/"+props.item.id
         }
     }
 }
