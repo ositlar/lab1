@@ -73,7 +73,8 @@ fun Route.lessonRoutes() {
             val newLesson = Lesson(
                 lesson.elem.name,
                 (lesson.elem.students.toList() - lesson.elem.students.first {
-                    it.studentId == idS }).toTypedArray()
+                    it.studentId == idS
+                }).toTypedArray()
             )
             lessonsRepo.update(lesson.id, newLesson)
 
