@@ -3,7 +3,9 @@ package component.lesson
 import invalidateRepoKey
 import js.core.jso
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.ositlar.application.command.AddStudentToLesson
 import me.ositlar.application.common.Item
 import me.ositlar.application.config.Config
 import me.ositlar.application.data.Lesson
@@ -25,6 +27,7 @@ import tools.fetch
 import tools.fetchText
 import web.html.HTMLInputElement
 import web.html.HTMLSelectElement
+import kotlin.js.json
 
 external interface StudentSelectProps : Props {
     var startName: String
@@ -78,7 +81,18 @@ val CAddStudentToLesson = FC<AddStudentProps>("AddStudent") { props ->
     val addStudentMutation = useMutation<HTTPResult, Any, StudentId, Any>(
         mutationFn = { studentId ->
             fetch(
-                "${Config.lessonsPath}/${props.lesson.id}/students/$studentId",
+                "${Config.lessonsPath}/${AddStudentToLesson.path}",
+                jso {
+                    method = "POST"
+                    headers = json(
+                        "Content-Type" to "application/json"
+                    )
+                    body = Json.encodeToString(AddStudentToLesson(
+                        props.lesson.id,
+                        studentId,
+                        props.lesson.version
+                    ))
+                }
             )
         },
         options = jso {
@@ -102,3 +116,4 @@ val CAddStudentToLesson = FC<AddStudentProps>("AddStudent") { props ->
         }
     }
 }
+

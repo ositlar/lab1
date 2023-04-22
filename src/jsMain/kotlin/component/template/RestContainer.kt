@@ -36,7 +36,6 @@ inline fun <reified E : Any> restContainer(
     val queryClient = useQueryClient()
     val myQueryKey = arrayOf(queryId).unsafeCast<QueryKey>()
 
-
     val query = useQuery<String, QueryError, String, QueryKey>(
         queryKey = myQueryKey,
         queryFn = {

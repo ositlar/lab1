@@ -9,6 +9,5 @@ import react.dom.html.ReactHTML.span
 val CLessonInList = FC<ElementInListProps<Lesson>>("LessonInList") { props ->
     span {
         +props.item.elem.name
-
     }
 }

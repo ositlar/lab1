@@ -38,7 +38,6 @@ fun main() {
 val app = FC<Props>("App") {
     HashRouter {
         QueryClientProvider {
-
             client = QueryClient()
             ul {
                 listOf("Students", "Lessons").map { tag ->
@@ -54,11 +53,12 @@ val app = FC<Props>("App") {
             Routes {
                 Route {
                     path = "lessons"
-                    val list: FC<RestContainerChildProps<Lesson>> = restList(
-                        CLessonInList,
-                        CLessonAdd,
-                        CLessonEditContainer
-                    )
+                    val list: FC<RestContainerChildProps<Lesson>> =
+                        restList(
+                            CLessonInList,
+                            CLessonAdd,
+                            CLessonEditContainer
+                        )
                     element = restContainer(
                         Config.lessonsPath,
                         list,
@@ -67,11 +67,12 @@ val app = FC<Props>("App") {
                 }
                 Route {
                     path = "students"
-                    val list: FC<RestContainerChildProps<Student>> = restList(
-                        CStudentInList,
-                        CStudentAdd,
-                        CStudentEdit
-                    )
+                    val list: FC<RestContainerChildProps<Student>> =
+                        restList(
+                            CStudentInList,
+                            CStudentAdd,
+                            CStudentEdit
+                        )
                     element = restContainer(
                         Config.studentsPath,
                         list,
@@ -79,7 +80,7 @@ val app = FC<Props>("App") {
                     ).create()
                 }
                 Route{
-                    path = Config.studentsPath + "personsLessons/"+":name"
+                    path = Config.studentsPath + "personsLessons/" + ":name"
                     element = studentInLessonContainer.create()
 
                 }

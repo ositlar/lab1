@@ -7,6 +7,6 @@ interface Repo<E> {
     fun read(): List<Item<E>>
     fun read(id: String): Item<E>?
     fun read(ids: List<String>): List<Item<E>>
-    fun update(id: String, value: E): Boolean
+    fun update(item: Item<E>): Boolean
     fun delete(id: String): Boolean
 }

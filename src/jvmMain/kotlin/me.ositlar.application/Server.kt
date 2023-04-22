@@ -27,7 +27,7 @@ fun Application.config(isTest: Boolean) {
         createTestData()
         install(createApplicationPlugin("DelayEmulator") {
             onCall {
-                delay(1000L)
+                delay(5000L)
             }
         })
     }

@@ -1,5 +1,6 @@
 package me.ositlar.application.repo
 
+import me.ositlar.application.common.Item
 import me.ositlar.application.data.Grade
 import me.ositlar.application.data.GradeInfo
 import me.ositlar.application.data.Lesson
@@ -44,5 +45,6 @@ fun createTestData() {
             GradeInfo(sheldon.id, Grade.A),
             GradeInfo(leonard.id, Grade.B)
         ))
-    lessonsRepo.update(math.id, newMath)
+    lessonsRepo.update(Item(newMath, math.id, math.version))
 }
+

@@ -5,7 +5,9 @@ import emotion.react.css
 import invalidateRepoKey
 import js.core.jso
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import me.ositlar.application.command.DeleteStudentFromLesson
 import me.ositlar.application.common.Item
 import me.ositlar.application.config.Config
 import me.ositlar.application.data.Lesson
@@ -27,6 +29,7 @@ import tools.fetch
 import tools.fetchText
 import web.html.HTMLInputElement
 import web.html.HTMLSelectElement
+import kotlin.js.json
 
 
 external interface SelectDeleteStudentProps : Props {
@@ -84,7 +87,18 @@ val CDeleteStudent = FC<DeleteStudentProps>("DeleteStudent") { props ->
     val deleteMutation = useMutation<HTTPResult, Any, StudentId, Any>(
         mutationFn = { studentId ->
             fetch(
-                "${Config.lessonsPath}/${props.lesson.id}/delete/$studentId"
+                "${Config.lessonsPath}/${DeleteStudentFromLesson.path}",
+                jso {
+                    method = "PUT"
+                    headers = json(
+                        "Content-Type" to "application/json"
+                    )
+                    body = Json.encodeToString(DeleteStudentFromLesson(
+                        props.lesson.id,
+                        studentId,
+                        props.lesson.version
+                    ))
+                }
             )
         },
         options = jso {

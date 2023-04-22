@@ -35,7 +35,7 @@ inline fun <reified E : Any> restList(
     if (editedItem != null)
         cEditItem {
             item = editedItem
-            saveElement = { props.updateItem(Item(it, editedItem.id)) }
+            saveElement = { props.updateItem(Item(it, editedItem.id, editedItem.version)) }
             key = editedItem.id
         }
     ol {

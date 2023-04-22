@@ -77,21 +77,22 @@ inline fun <reified T : Any> Route.repoRoutes(
             )
         }
     }
-    put("{id}") {
-        val id = call.parameters["id"] ?: return@put call.respondText(
-            "Missing or malformed id",
-            status = HttpStatusCode.BadRequest
-        )
-        repo.read(id) ?: return@put call.respondText(
-            "No element with id $id",
+    put {
+        val newItem = Json.decodeFromString(itemSerializer, call.receive())
+        repo.read(newItem.id) ?: return@put call.respondText(
+            "No element with id ${newItem.id}",
             status = HttpStatusCode.NotFound
         )
-        val newElementJson = call.receive<String>()
-        val newElement = Json.decodeFromString(serializer, newElementJson)
-        repo.update(id, newElement)
-        call.respondText(
-            "Element updates correctly",
-            status = HttpStatusCode.Created
-        )
+        if(repo.update(newItem)) {
+            call.respondText(
+                "Element updates correctly",
+                status = HttpStatusCode.Created
+            )
+        } else {
+            call.respondText(
+                "Element had updated on server",
+                status = HttpStatusCode.BadRequest
+            )
+        }
     }
 }
