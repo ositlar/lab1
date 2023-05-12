@@ -25,6 +25,7 @@ import tanstack.react.query.useQueryClient
 import tools.HTTPResult
 import tools.fetch
 import tools.fetchText
+import userInfoContext
 import web.html.HTMLInputElement
 import web.html.HTMLSelectElement
 import kotlin.js.json
@@ -36,10 +37,16 @@ external interface StudentSelectProps : Props {
 
 val CStudentSelect = FC<StudentSelectProps>("StudentSelect") { props ->
     val selectQueryKey = arrayOf("StudentSelect", props.startName).unsafeCast<QueryKey>()
+    val userInfo = useContext(userInfoContext)
     val query = useQuery<String, QueryError, String, QueryKey>(
         queryKey = selectQueryKey,
         queryFn = {
-            fetchText("${Config.studentsPath}ByStartName/${props.startName}")
+            fetchText(
+                "${Config.studentsPath}ByStartName/${props.startName}",
+                jso {
+                    headers = json("Authorization" to userInfo?.second?.authHeader)
+                }
+            )
         }
     )
     val selectRef = useRef<HTMLSelectElement>()
@@ -77,6 +84,7 @@ val CAddStudentToLesson = FC<AddStudentProps>("AddStudent") { props ->
     val invalidateRepoKey = useContext(invalidateRepoKey)
     var input by useState("")
     val inputRef = useRef<HTMLInputElement>()
+    val userInfo = useContext(userInfoContext)
 
     val addStudentMutation = useMutation<HTTPResult, Any, StudentId, Any>(
         mutationFn = { studentId ->
@@ -85,7 +93,8 @@ val CAddStudentToLesson = FC<AddStudentProps>("AddStudent") { props ->
                 jso {
                     method = "POST"
                     headers = json(
-                        "Content-Type" to "application/json"
+                        "Content-Type" to "application/json",
+                        "Authorization" to userInfo?.second?.authHeader
                     )
                     body = Json.encodeToString(AddStudentToLesson(
                         props.lesson.id,

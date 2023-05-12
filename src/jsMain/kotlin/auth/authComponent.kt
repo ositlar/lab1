@@ -54,7 +54,7 @@ val CAuthIn = FC<AuthInProps>("Auth") { props ->
 }
 val CAuthOut = FC<AuthOutProps>("Auth") { props ->
     div {
-        +"${props.user.username}"
+        +props.user.username
         button {
             +"SignOut"
             onClick = {

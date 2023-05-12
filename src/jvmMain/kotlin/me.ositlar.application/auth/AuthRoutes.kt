@@ -9,6 +9,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import me.ositlar.application.access.User
+import me.ositlar.application.access.userList
 import me.ositlar.application.auth.AuthConfig.Companion.audience
 import me.ositlar.application.auth.AuthConfig.Companion.issuer
 import me.ositlar.application.auth.AuthConfig.Companion.secret

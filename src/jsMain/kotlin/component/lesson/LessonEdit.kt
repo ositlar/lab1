@@ -18,16 +18,19 @@ import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.input
+import react.useContext
 import react.useState
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useQuery
 import tools.fetchText
+import userInfoContext
 import web.html.InputType
 import kotlin.js.json
 
 val CLessonEditContainer = FC<EditItemProps<Lesson>>("LessonEditContainer") { props ->
     val sk = props.item.elem.students.joinToString(separator = "") { "s" }
     val myQueryKey = arrayOf("LessonEditContainer", sk).unsafeCast<QueryKey>()
+    val userInfo = useContext(userInfoContext)
     val query = useQuery<String, QueryError, String, QueryKey>(
         queryKey = myQueryKey,
         queryFn = {
@@ -35,7 +38,10 @@ val CLessonEditContainer = FC<EditItemProps<Lesson>>("LessonEditContainer") { pr
                 "${Config.studentsPath}byId",
                 jso {
                     method = "POST"
-                    headers = json("Content-Type" to "application/json")
+                    headers = json(
+                        "Content-Type" to "application/json",
+                        "Authorization" to userInfo?.second?.authHeader
+                    )
                     body = Json.encodeToString(props.item.elem.students.map { it.studentId })
                 }
             )
@@ -76,6 +82,7 @@ external interface LessonEditProps : Props {
 
 val CLessonEdit = FC<LessonEditProps>("LessonEdit") { props ->
     var name by useState(props.item.elem.name)
+    val userInfo = useContext(userInfoContext)
     div {
         input {
             type = InputType.text
@@ -99,7 +106,7 @@ val CLessonEdit = FC<LessonEditProps>("LessonEdit") { props ->
         students = props.students
         changeStudents = {
             props.saveElement(
-                Lesson(props.item.elem.name, it.map {
+                Lesson(props.item.elem.name, it.map { it ->
                     GradeInfo(it.itemStudent.id, it.grade)
                 }.toTypedArray())
             )

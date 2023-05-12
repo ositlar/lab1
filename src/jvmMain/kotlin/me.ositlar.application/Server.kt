@@ -9,9 +9,11 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.delay
 import me.ositlar.application.auth.AuthException
+import me.ositlar.application.auth.authConfig
 import me.ositlar.application.auth.authRoutes
 import me.ositlar.application.repo.createTestData
 import me.ositlar.application.rest.lessonRoutes
+import me.ositlar.application.rest.roleRoutes
 import me.ositlar.application.rest.studentLessonRoutes
 import me.ositlar.application.rest.studentRoutes
 
@@ -31,11 +33,12 @@ fun Application.config(isTest: Boolean) {
     install(ContentNegotiation) {
         json()
     }
+    authConfig()
     if (isTest) {
         createTestData()
         install(createApplicationPlugin("DelayEmulator") {
             onCall {
-                delay(1000L)
+                delay(1)
             }
         })
     }
@@ -47,6 +50,7 @@ fun Application.rest() {
         studentRoutes()
         lessonRoutes()
         studentLessonRoutes()
+        roleRoutes()
     }
 }
 

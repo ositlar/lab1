@@ -9,11 +9,11 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import me.ositlar.application.auth.authorization
 import me.ositlar.application.auth.roleAdmin
-import me.ositlar.application.auth.roleList
 import me.ositlar.application.command.AddStudentToLesson
 import me.ositlar.application.common.Item
 import me.ositlar.application.config.Config
 import me.ositlar.application.repo.lessonsRepo
+import me.ositlar.application.repo.rolesRepo
 import me.ositlar.application.repo.studentsRepo
 
 fun Route.lessonRoutes() {
@@ -21,11 +21,10 @@ fun Route.lessonRoutes() {
         repoRoutes(
             lessonsRepo,
             listOf(
-                ApiPoint.read to { roleList.toSet() },
+                ApiPoint.read to { rolesRepo.read().map { it.elem }.toSet() },
                 ApiPoint.write to { setOf(roleAdmin) }
             )
-            )
-
+        )
         authenticate("auth-jwt") {
             authorization(setOf(roleAdmin)) {
                 post(AddStudentToLesson.path) {

@@ -2,6 +2,9 @@ import auth.authProvider
 import component.lesson.CLessonAdd
 import component.lesson.CLessonEditContainer
 import component.lesson.CLessonInList
+import component.role.CRoleAdd
+import component.role.CRoleEdit
+import component.role.CRoleInList
 import component.student.CStudentAdd
 import component.student.CStudentEdit
 import component.student.CStudentInList
@@ -9,6 +12,7 @@ import component.stundetsInLesson.studentInLessonContainer
 import component.template.RestContainerChildProps
 import component.template.restContainer
 import component.template.restList
+import me.ositlar.application.access.Role
 import me.ositlar.application.access.Token
 import me.ositlar.application.access.User
 import me.ositlar.application.config.Config
@@ -46,7 +50,7 @@ val app = FC<Props>("App") {
             QueryClientProvider {
                 client = QueryClient()
                 ul {
-                    listOf("Students", "Lessons").map { tag ->
+                    listOf("Students", "Lessons", "Roles").map { tag ->
                         li {
                             Link {
                                 +tag
@@ -83,6 +87,20 @@ val app = FC<Props>("App") {
                             Config.studentsPath,
                             list,
                             "students"
+                        ).create()
+                    }
+                    Route {
+                        path = Config.rolesPath
+                        val list: FC<RestContainerChildProps<Role>> =
+                            restList(
+                                CRoleInList,
+                                CRoleAdd,
+                                CRoleEdit
+                            )
+                        element = restContainer(
+                            Config.rolesPath,
+                            list,
+                            "roles"
                         ).create()
                     }
                     Route{

@@ -7,8 +7,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import me.ositlar.application.auth.authorization
 import me.ositlar.application.auth.roleAdmin
-import me.ositlar.application.auth.roleList
 import me.ositlar.application.config.Config
+import me.ositlar.application.repo.lessonsRepo
+import me.ositlar.application.repo.rolesRepo
 import me.ositlar.application.repo.studentsRepo
 
 fun Route.studentRoutes() {
@@ -16,7 +17,7 @@ fun Route.studentRoutes() {
         repoRoutes(
             studentsRepo,
             listOf(
-                ApiPoint.read to { roleList.toSet() },
+                ApiPoint.read to { rolesRepo.read().map { it.elem }.toSet() },
                 ApiPoint.write to { setOf(roleAdmin) }
             )
         )
@@ -35,6 +36,22 @@ fun Route.studentRoutes() {
                         call.respondText("No students found", status = HttpStatusCode.NotFound)
                     } else {
                         call.respond(students)
+                    }
+                }
+            }
+            authorization(rolesRepo.read().map { it.elem }.toSet()) {
+                get("{idS}/lessons") {
+                    val idS = call.parameters["idS"] ?: return@get call.respondText(
+                        "Missing or malformed student id",
+                        status = HttpStatusCode.BadRequest
+                    )
+                    val lessons = lessonsRepo.read().map {
+                        if (it.elem.students.find { it.studentId == idS } != null) it.elem.name else null
+                    }
+                    if (lessons.isEmpty()) {
+                        call.respondText("No lessons found", status = HttpStatusCode.NotFound)
+                    } else {
+                        call.respond(lessons)
                     }
                 }
             }

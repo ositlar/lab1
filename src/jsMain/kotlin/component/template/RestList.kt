@@ -9,7 +9,7 @@ import react.dom.html.ReactHTML.span
 import react.useState
 
 external interface ElementInListProps<E> : Props {
-    var item: Item<E>
+    var element: E
 }
 
 external interface EditAddProps<E> : Props {
@@ -22,7 +22,7 @@ external interface EditItemProps<E> : Props {
 }
 
 inline fun <reified E : Any> restList(
-    cElementInList: FC<ElementInListProps<E>>,
+    cElementInList: FC<ElementInListProps<Item<E>>>,
     cAddItem: FC<EditAddProps<E>>,
     cEditItem: FC<EditItemProps<E>>,
     displayName: String = "ListContainer"
@@ -42,7 +42,7 @@ inline fun <reified E : Any> restList(
         props.items.forEachIndexed { index, item ->
             li {
                 cElementInList {
-                    this.item = item
+                    element = item
                 }
                 span {
                     +" ✂ "

@@ -7,6 +7,8 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import me.ositlar.application.access.userList
+import me.ositlar.application.repo.rolesRepo
 
 class AuthConfig {
     companion object {
@@ -42,8 +44,15 @@ fun Application.authConfig() {
     }
     install(Authorization) {
         getRole = { user ->
-            val user = userList.find { it.username == user.username }
-            userRoles.getOrDefault(user, emptySet())
+            val usr = userList.find { it.username == user.username }
+            rolesRepo.read().mapNotNull { role ->
+                if (usr!!.username in role.elem.users.map { it.username }){
+                    role.elem
+                }
+                else {
+                    null
+                }
+            }.toSet()
         }
     }
 }

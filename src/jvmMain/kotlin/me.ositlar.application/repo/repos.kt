@@ -1,5 +1,7 @@
 package me.ositlar.application.repo
 
+import me.ositlar.application.access.Role
+import me.ositlar.application.auth.roleList
 import me.ositlar.application.common.Item
 import me.ositlar.application.data.Grade
 import me.ositlar.application.data.GradeInfo
@@ -8,8 +10,13 @@ import me.ositlar.application.data.Student
 
 val studentsRepo = ListRepo<Student>()
 val lessonsRepo = ListRepo<Lesson>()
+val rolesRepo = ListRepo<Role>()
 
 fun createTestData() {
+    roleList.map {
+        rolesRepo.create(it)
+    }
+
     listOf(
         Student("Sheldon", "Cooper"),
         Student("Leonard", "Hofstadter"),

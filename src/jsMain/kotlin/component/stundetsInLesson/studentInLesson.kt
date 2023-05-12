@@ -7,6 +7,6 @@ import react.dom.html.ReactHTML
 
 val CStudentInLesson = FC<ElementInListProps<Student>>("StudentInList") { props ->
     ReactHTML.span {
-        +props.item.elem.fullName()
+        +props.element.fullName()
     }
 }
