@@ -10,9 +10,7 @@ import me.ositlar.application.repo.studentsRepo
 fun Route.studentLessonRoutes() {
     route(Config.studentsPath + "personsLessons/") {
         get("{id}") {
-
             val id = call.parameters["id"]
-
             val lesson = lessonsRepo.read()
                 .filter{ item -> item.elem.students.any {it.studentId == id}}
                 .map { it.elem.name }

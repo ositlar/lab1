@@ -62,6 +62,9 @@ kotlin {
                 implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
+                implementation("io.ktor:ktor-server-auth:$ktorVersion")
+                implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
+                implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinHtmlVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
             }

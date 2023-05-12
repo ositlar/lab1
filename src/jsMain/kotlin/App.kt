@@ -1,3 +1,4 @@
+import auth.authProvider
 import component.lesson.CLessonAdd
 import component.lesson.CLessonEditContainer
 import component.lesson.CLessonInList
@@ -8,6 +9,8 @@ import component.stundetsInLesson.studentInLessonContainer
 import component.template.RestContainerChildProps
 import component.template.restContainer
 import component.template.restList
+import me.ositlar.application.access.Token
+import me.ositlar.application.access.User
 import me.ositlar.application.config.Config
 import me.ositlar.application.data.Lesson
 import me.ositlar.application.data.Student
@@ -28,7 +31,9 @@ import tanstack.react.query.QueryClientProvider
 import tanstack.react.query.devtools.ReactQueryDevtools
 import web.dom.document
 
+typealias  UserInfo = Pair<User, Token>?
 val invalidateRepoKey = createContext<QueryKey>()
+val userInfoContext = createContext<UserInfo>(null)
 
 fun main() {
     val container = document.getElementById("root")!!
@@ -37,55 +42,57 @@ fun main() {
 
 val app = FC<Props>("App") {
     HashRouter {
-        QueryClientProvider {
-            client = QueryClient()
-            ul {
-                listOf("Students", "Lessons").map { tag ->
-                    li {
-                        Link {
-                            +tag
-                            to = tag.lowercase()
+        authProvider {
+            QueryClientProvider {
+                client = QueryClient()
+                ul {
+                    listOf("Students", "Lessons").map { tag ->
+                        li {
+                            Link {
+                                +tag
+                                to = tag.lowercase()
+                            }
                         }
                     }
                 }
-            }
 
-            Routes {
-                Route {
-                    path = "lessons"
-                    val list: FC<RestContainerChildProps<Lesson>> =
-                        restList(
-                            CLessonInList,
-                            CLessonAdd,
-                            CLessonEditContainer
-                        )
-                    element = restContainer(
-                        Config.lessonsPath,
-                        list,
-                        "lessons"
-                    ).create()
-                }
-                Route {
-                    path = "students"
-                    val list: FC<RestContainerChildProps<Student>> =
-                        restList(
-                            CStudentInList,
-                            CStudentAdd,
-                            CStudentEdit
-                        )
-                    element = restContainer(
-                        Config.studentsPath,
-                        list,
-                        "students"
-                    ).create()
-                }
-                Route{
-                    path = Config.studentsPath + "personsLessons/" + ":name"
-                    element = studentInLessonContainer.create()
+                Routes {
+                    Route {
+                        path = "lessons"
+                        val list: FC<RestContainerChildProps<Lesson>> =
+                            restList(
+                                CLessonInList,
+                                CLessonAdd,
+                                CLessonEditContainer
+                            )
+                        element = restContainer(
+                            Config.lessonsPath,
+                            list,
+                            "lessons"
+                        ).create()
+                    }
+                    Route {
+                        path = "students"
+                        val list: FC<RestContainerChildProps<Student>> =
+                            restList(
+                                CStudentInList,
+                                CStudentAdd,
+                                CStudentEdit
+                            )
+                        element = restContainer(
+                            Config.studentsPath,
+                            list,
+                            "students"
+                        ).create()
+                    }
+                    Route{
+                        path = Config.studentsPath + "personsLessons/" + ":name"
+                        element = studentInLessonContainer.create()
 
+                    }
                 }
+                ReactQueryDevtools { }
             }
-            ReactQueryDevtools { }
         }
     }
 }
