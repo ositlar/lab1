@@ -9,6 +9,8 @@ import me.ositlar.application.common.Item
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.label
 import react.useRef
 import web.html.HTMLSelectElement
 
@@ -18,21 +20,26 @@ external interface AddUserProps : Props {
 }
 
 val CAddUserToLesson = FC<AddUserProps>("AddStudent") { props ->
-    val selectRef = useRef<HTMLSelectElement>()
-    ReactHTML.select {
-        ref = selectRef
-        userList.map { user ->
-            ReactHTML.option {
-                +"${user.username} ${user.password}"
-                value = Json.encodeToString(user)
+    div {
+        val selectRef = useRef<HTMLSelectElement>()
+        label {
+            +"Add user to Role"
+        }
+        ReactHTML.select {
+            ref = selectRef
+            userList.map { user ->
+                ReactHTML.option {
+                    +"${user.username}"
+                    value = Json.encodeToString(user)
+                }
             }
         }
-    }
-    ReactHTML.button {
-        +"add"
-        onClick = {
-            selectRef.current?.value?.let {
-                props.addUser(props.role.elem.addUser(Json.decodeFromString(selectRef.current!!.value)))
+        ReactHTML.button {
+            +"Add"
+            onClick = {
+                selectRef.current?.value?.let {
+                    props.addUser(props.role.elem.addUser(Json.decodeFromString(selectRef.current!!.value)))
+                }
             }
         }
     }

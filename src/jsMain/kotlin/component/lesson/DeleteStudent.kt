@@ -18,6 +18,7 @@ import react.*
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.input
+import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.option
 import react.dom.html.ReactHTML.select
 import tanstack.query.core.QueryKey
@@ -59,23 +60,28 @@ val CSelectDeleteStudent = FC<SelectDeleteStudentProps>("DeleteStudent") { props
         } catch (e: Throwable) {
             emptyList()
         }
-    select {
-        ref = selectRef
-        students.map {
-            option {
-                +it.elem.fullName()
-                value = it.id
+    div {
+        label {
+            +"Delete student from lesson"
+        }
+        select {
+            ref = selectRef
+            students.map {
+                option {
+                    +it.elem.fullName()
+                    value = it.id
+                }
             }
         }
-    }
-    button {
-        css {
-            color = Color("Red")
-        }
-        +"Delete"
-        onClick = {
-            selectRef.current?.value?.let {
-                props.onPick(it)
+        button {
+            css {
+                color = Color("Red")
+            }
+            +"Delete"
+            onClick = {
+                selectRef.current?.value?.let {
+                    props.onPick(it)
+                }
             }
         }
     }

@@ -11,6 +11,8 @@ import query.QueryError
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML
+import react.dom.html.ReactHTML.label
+import react.dom.html.ReactHTML.strong
 import react.useContext
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useMutation
@@ -111,6 +113,12 @@ inline fun <reified E : Any> restContainer(
     if (query.isLoading) ReactHTML.div { +"Loading .." }
     else if (query.isError) ReactHTML.div { +"Error!" }
     else {
+        label {
+            strong {
+                +queryId
+
+            }
+        }
         invalidateRepoKey.Provider(myQueryKey) {
             child {
                 items = Json.decodeFromString(query.data ?: "")

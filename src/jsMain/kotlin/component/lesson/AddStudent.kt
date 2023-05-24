@@ -16,8 +16,10 @@ import react.*
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.input
+import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.option
 import react.dom.html.ReactHTML.select
+import react.dom.html.ReactHTML.td
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useMutation
 import tanstack.react.query.useQuery
@@ -56,20 +58,25 @@ val CStudentSelect = FC<StudentSelectProps>("StudentSelect") { props ->
         } catch (e: Throwable) {
             emptyList()
         }
-    select {
-        ref = selectRef
-        students.map {
-            option {
-                +it.elem.fullName()
-                value = it.id
+    div {
+        label {
+            +"Add student to lesson"
+        }
+        select {
+            ref = selectRef
+            students.map {
+                option {
+                    +it.elem.fullName()
+                    value = it.id
+                }
             }
         }
-    }
-    button {
-        +"Add"
-        onClick = {
-            selectRef.current?.value?.let {
-                props.onPick(it)
+        button {
+            +"Add"
+            onClick = {
+                selectRef.current?.value?.let {
+                    props.onPick(it)
+                }
             }
         }
     }
@@ -112,6 +119,9 @@ val CAddStudentToLesson = FC<AddStudentProps>("AddStudent") { props ->
     )
 
     div {
+        td {
+            +"Add Student"
+        }
         input {
             ref = inputRef
             list = "StudentsHint"
