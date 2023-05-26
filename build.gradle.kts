@@ -22,6 +22,7 @@ val kotlinWrappers = "org.jetbrains.kotlin-wrappers"
 val kotlinWrappersVersion = "1.0.0-pre.490"
 val kotlinHtmlVersion = "0.7.2"
 val logbackVersion = "1.4.5"
+val arrowVersion = "1.2.0-RC"
 
 kotlin {
     jvm {
@@ -48,6 +49,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+                implementation("io.arrow-kt:arrow-core:$arrowVersion")
             }
         }
         val commonTest by getting {

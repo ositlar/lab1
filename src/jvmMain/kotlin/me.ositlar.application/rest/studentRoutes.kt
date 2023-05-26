@@ -30,7 +30,7 @@ fun Route.studentRoutes() {
                             status = HttpStatusCode.BadRequest
                         )
                     val students = studentsRepo.read().filter {
-                        it.elem.firstname.startsWith(startName)
+                        it.elem.firstname.name.startsWith(startName)
                     }
                     if (students.isEmpty()) {
                         call.respondText("No students found", status = HttpStatusCode.NotFound)

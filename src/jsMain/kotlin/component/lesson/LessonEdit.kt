@@ -1,5 +1,7 @@
 package component.lesson
 
+import arrow.core.Either
+import arrow.core.NonEmptyList
 import component.template.EditItemProps
 import js.core.jso
 import kotlinx.serialization.decodeFromString
@@ -11,20 +13,20 @@ import me.ositlar.application.data.Grade
 import me.ositlar.application.data.GradeInfo
 import me.ositlar.application.data.Lesson
 import me.ositlar.application.data.Student
+import me.ositlar.application.type.LessonName
+import me.ositlar.application.type.TypeError
 import query.QueryError
-import react.FC
-import react.Props
+import react.*
 import react.dom.html.ReactHTML
 import react.dom.html.ReactHTML.button
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
-import react.useContext
-import react.useState
 import tanstack.query.core.QueryKey
 import tanstack.react.query.useQuery
 import tools.fetchText
 import userInfoContext
+import web.html.HTMLLabelElement
 import web.html.InputType
 import kotlin.js.json
 
@@ -82,8 +84,9 @@ external interface LessonEditProps : Props {
 }
 
 val CLessonEdit = FC<LessonEditProps>("LessonEdit") { props ->
-    var name by useState(props.item.elem.name)
+    var name by useState(props.item.elem.name.lessonName)
     val userInfo = useContext(userInfoContext)
+    val labelRef = useRef<HTMLLabelElement>()
     div {
         label {
             +"Change lesson's name"
@@ -93,10 +96,20 @@ val CLessonEdit = FC<LessonEditProps>("LessonEdit") { props ->
             value = name
             onChange = { name = it.target.value }
         }
+        label {
+            ref = labelRef
+        }
         button {
             +"Change Name"
             onClick = {
-                props.saveElement(Lesson(name, props.item.elem.students))
+                val lesson: Either<NonEmptyList<TypeError>, Lesson> = Lesson(LessonName(name), props.item.elem.students)
+                labelRef.current?.textContent = when (lesson) {
+                    is Either.Left -> lesson.value.joinToString { it.error }
+                    is Either.Right -> {
+                        props.saveElement(lesson.value)
+                        ""
+                    }
+                }
             }
         }
     }

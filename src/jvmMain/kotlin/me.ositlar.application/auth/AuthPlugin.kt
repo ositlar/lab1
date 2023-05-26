@@ -42,7 +42,7 @@ fun Route.authorization(
     roles: () -> Set<Role>,
     build: Route.() -> Unit
 ): Route {
-    val name = roles().joinToString { it.name }
+    val name = roles().joinToString { it.name.roleName }
     val authenticatedRoute = createChild(AuthorizationRouteSelector(name))
     authenticatedRoute.install(RouteAuthorization) {
         this.allowedRoles = roles

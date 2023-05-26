@@ -8,6 +8,6 @@ import react.dom.html.ReactHTML
 
 val CRoleInList = FC<ElementInListProps<Item<Role>>>("StudentInList") { props ->
     ReactHTML.span {
-        +props.element.elem.name
+        +props.element.elem.name.roleName
     }
 }

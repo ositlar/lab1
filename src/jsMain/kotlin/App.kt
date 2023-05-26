@@ -104,7 +104,7 @@ val app = FC<Props>("App") {
                         ).create()
                     }
                     Route{
-                        path = Config.studentsPath + "personsLessons/" + ":name"
+                        path = Config.studentsPath + ":name" + "/lessons"
                         element = studentInLessonContainer.create()
 
                     }

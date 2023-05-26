@@ -29,7 +29,7 @@ val CAddUserToLesson = FC<AddUserProps>("AddStudent") { props ->
             ref = selectRef
             userList.map { user ->
                 ReactHTML.option {
-                    +"${user.username}"
+                    +user.username
                     value = Json.encodeToString(user)
                 }
             }
